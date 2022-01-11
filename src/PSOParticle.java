@@ -1,6 +1,3 @@
-import java.util.Random;
-import java.math.*;
-
 public class PSOParticle implements arrayUtils, inversionUtils{
 
     int vecDim = 2;
@@ -33,6 +30,9 @@ public class PSOParticle implements arrayUtils, inversionUtils{
     public void initializeParticle() {
         double[] tempVec = new double[vecDim];
         double[] tempVelocity = new double[vecDim];
+
+        // randomize the initial vector and velocity until
+        // they are within the set interval;
         do {
             for (int i = 0; i < vecDim; i++) {
                 tempVec[i] = Math.random() * 5;
@@ -56,6 +56,9 @@ public class PSOParticle implements arrayUtils, inversionUtils{
 
     public void upgradeParticleVector() {
         setParticleVector(arraySum(particleVector,particleVelocity));
+
+        // check if the newly upgraded vector is having
+        // smaller misfit than previous ones;
         double localMisfit = getMisfit(particleVector, new double[]{3.0,5.0});
         if (localMisfit < leastMisfit) {
             leastMisfit = localMisfit;

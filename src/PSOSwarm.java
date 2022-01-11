@@ -16,6 +16,8 @@ public class PSOSwarm implements arrayUtils,inversionUtils{
         }
     }
 
+    // initialize particles;
+    // set the initial global best particle as the first one;
     public void initializeSwarm() {
         for (int i = 0; i < LocSize; i++) {
             PSOParticle tempParticle = new PSOParticle();

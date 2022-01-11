@@ -5,14 +5,14 @@ import org.knowm.xchart.XYChart;
 public interface inversionUtils {
 
 
-    default public void plot2DProfile(double[] x, double[] y, String title) {
+    default void plot2DProfile(double[] x, double[] y, String title) {
         XYChart chart = QuickChart.getChart(title, "X", "Y", "y(x)", x, y);
         new SwingWrapper(chart).displayChart();
     }
 
     // parameter 1: radius of orbit;
     // parameter 2: depth of orbit center;
-    default public double[] forwarding(double[] parameterVector) {
+    default double[] forwarding(double[] parameterVector) {
         double CONSTANT_G = 6.67259e-1, PI = Math.PI;
         double[] deltaG = new double[50], meshX = new double[50];
         for (int i = 0; i < meshX.length; i++) {
@@ -25,7 +25,7 @@ public interface inversionUtils {
 
     // replace double[] modelParameter with double[] modelModel if not using a known model;
     // modelModel[] in this case should be representing deltaG gathered along the profile;
-    default public double getMisfit(double[] estimatedParameter, double[] modelParameter) {
+    default double getMisfit(double[] estimatedParameter, double[] modelParameter) {
         double misfit = 10000;
         double[] modelModel = forwarding(modelParameter);
         double[] estimatedModel = forwarding(estimatedParameter);
