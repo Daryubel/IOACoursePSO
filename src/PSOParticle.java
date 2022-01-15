@@ -1,9 +1,10 @@
 public class PSOParticle implements arrayUtils, inversionUtils{
 
-    int vecDim = 2;
+    public double[] modelParameter = {40,20,44,20,30};
+    int vecDim = 5;
     double c1=0.5, c2=0.5, r1=1.5, r2=1.5;
     double leastMisfit = 10000;
-    double[] floor = {0,0}, ceil = {100,100}, vCeil = {100,100};
+    double[] floor = {0,0,0,0,0}, ceil = {100,100,100,100,100}, vCeil = {100,100,100,100,100};
     double[] particleVector = new double[vecDim];
     double[] particleVelocity = new double[vecDim];
     double[] personalBestVector;
@@ -35,8 +36,8 @@ public class PSOParticle implements arrayUtils, inversionUtils{
         // they are within the set interval;
         do {
             for (int i = 0; i < vecDim; i++) {
-                tempVec[i] = Math.random() * 5;
-                tempVelocity[i] = Math.random() * 5;
+                tempVec[i] = Math.random() * 40;
+                tempVelocity[i] = Math.random() * 40;
             }
         } while (!isWithinInterval(tempVec, floor, ceil) || !isWithinInterval(tempVelocity, vCeil));
         setParticleVector(tempVec);
@@ -44,7 +45,7 @@ public class PSOParticle implements arrayUtils, inversionUtils{
     }
 
     public double getParticleMisfit() {
-        return getMisfit(particleVector, new double[]{3.0,5.0});
+        return getMisfit(particleVector, modelParameter);
     }
 
     public void upgradeParticleVelocity(PSOParticle globalBest) {
@@ -59,7 +60,7 @@ public class PSOParticle implements arrayUtils, inversionUtils{
 
         // check if the newly upgraded vector is having
         // smaller misfit than previous ones;
-        double localMisfit = getMisfit(particleVector, new double[]{3.0,5.0});
+        double localMisfit = getMisfit(particleVector, modelParameter);
         if (localMisfit < leastMisfit) {
             leastMisfit = localMisfit;
             personalBestVector = particleVector;

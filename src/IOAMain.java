@@ -2,6 +2,7 @@ import java.util.Arrays;
 
 public class IOAMain implements arrayUtils, inversionUtils{
 
+    public double[] modelParameter = {40,20,44,20,30};
 
     public void run() {
 
@@ -14,11 +15,12 @@ public class IOAMain implements arrayUtils, inversionUtils{
         // initialize particle swarm;
         PSOSwarm swarm = new PSOSwarm();
         swarm.setPSOSwarmSize(100);
-        swarm.setSwarmInterval(new double[]{2,3}, new double[]{4,6}, new double[]{2,2});
+        swarm.setSwarmInterval(new double[]{0,0,0,0,0}, new double[]{100,100,100,100,100}, new double[]{1,1,1,1,1});
         swarm.initializeSwarm();
+        plot2DProfile(meshX, forwardingRect(swarm.globalBest.particleVector), "initial");
 
         // initial parameter forwarding output;
-        plot2DProfile(meshX, forwarding(swarm.globalBest.particleVector), "initial");
+//        plot2DProfile(meshX, forwardingOrbit(swarm.globalBest.particleVector), "initial");
 
         // print swarm composition;
         for (int i = 0; i < 100; i++) {
@@ -27,7 +29,7 @@ public class IOAMain implements arrayUtils, inversionUtils{
 
         // iteration condition = misfit < 10^-3 or iteration time > 10000
         int iteration = 0;
-        while ((swarm.getLeastMisfit() > 1e-3) && (iteration<1e4)) {
+        while ((swarm.getLeastMisfit() > 1e-3) && (iteration<1e2)) {
             swarm.upgradeSwarm();
             swarm.getGlobalBest();
             iteration = iteration + 1;
@@ -35,8 +37,10 @@ public class IOAMain implements arrayUtils, inversionUtils{
 
         // draw the optimized parameter and the accurate model;
         // here the model is given by {3.0,5.0};
-        plot2DProfile(meshX, forwarding(swarm.globalBest.particleVector), "optimized");
-        plot2DProfile(meshX, forwarding(new double[]{3.0,5.0}), "model");
+//        plot2DProfile(meshX, forwardingOrbit(swarm.globalBest.particleVector), "optimized");
+//        plot2DProfile(meshX, forwardingOrbit(new double[]{3.0,5.0}), "model");
+        plot2DProfile(meshX, forwardingRect(swarm.globalBest.particleVector), "optimized");
+        plot2DProfile(meshX, forwardingRect(modelParameter), "model");
     }
 
 

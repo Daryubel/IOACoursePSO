@@ -6,13 +6,13 @@ public interface inversionUtils {
 
 
     default void plot2DProfile(double[] x, double[] y, String title) {
-        XYChart chart = QuickChart.getChart(title, "X", "Y", "y(x)", x, y);
+        XYChart chart = QuickChart.getChart(title, "X", "Y", "V_{zz}", x, y);
         new SwingWrapper(chart).displayChart();
     }
 
     // parameter 1: radius of orbit;
     // parameter 2: depth of orbit center;
-    default double[] forwarding(double[] parameterVector) {
+    default double[] forwardingOrbit(double[] parameterVector) {
         double CONSTANT_G = 6.67259e-1, PI = Math.PI;
         double[] deltaG = new double[50], meshX = new double[50];
         for (int i = 0; i < meshX.length; i++) {
@@ -23,12 +23,36 @@ public interface inversionUtils {
         return deltaG;
     }
 
+    // parameter 1: depth of the upper surface of the 1st rectangular;
+    // parameter 2: depth of the upper surface of the 2nd rectangular;
+    // parameter 3: depth of the upper surface of the 3rd rectangular;
+    // parameter 4: depth of the upper surface of the 4th rectangular;
+    // parameter 5: depth of the upper surface of the 5th rectangular;
+    default double[] forwardingRect(double[] parameterVector) {
+        double CONSTANT_G = 6.67259e-1, PI = Math.PI;
+        double[][] deltaG = new double[5][50];
+        double[] meshX = new double[50], deltaGGG = new double[50];
+        int recX = -4;
+        for (int i = 0; i < meshX.length; i++) {
+            meshX[i] = i - 50.0/2.0; }
+        for (int j = 0; j < 5; j++) {
+            for (int i = 0; i < meshX.length; i++) {
+                deltaG[j][i] = 2*CONSTANT_G*Math.atan((2*1*parameterVector[j]) / (Math.pow(meshX[i]+recX, 2)+Math.pow(parameterVector[j],2)-1)); }
+            recX += 2; }
+        for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < meshX.length; i++){
+                deltaGGG[i] = deltaG[j][i] + deltaG[j+1][i];
+            }
+        }
+        return deltaGGG;
+    }
+
     // replace double[] modelParameter with double[] modelModel if not using a known model;
     // modelModel[] in this case should be representing deltaG gathered along the profile;
     default double getMisfit(double[] estimatedParameter, double[] modelParameter) {
         double misfit = 10000;
-        double[] modelModel = forwarding(modelParameter);
-        double[] estimatedModel = forwarding(estimatedParameter);
+        double[] modelModel = forwardingOrbit(modelParameter);
+        double[] estimatedModel = forwardingOrbit(estimatedParameter);
 
         for (int i = 0; i < 50; i++) {
             misfit = misfit + Math.sqrt(Math.pow(modelModel[i] - estimatedModel[i],2)); }

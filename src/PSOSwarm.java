@@ -2,6 +2,7 @@ import java.util.ArrayList;
 
 public class PSOSwarm implements arrayUtils,inversionUtils{
 
+    public double[] modelParameter = {40,20,44,20,30};
     ArrayList<PSOParticle> swarmBody = new ArrayList<>(100);
     int LocSize;
     PSOParticle globalBest;
@@ -42,7 +43,7 @@ public class PSOSwarm implements arrayUtils,inversionUtils{
     }
 
     public double getLeastMisfit() {
-        return getMisfit(globalBest.particleVector, new double[]{3.0,5.0});
+        return getMisfit(globalBest.particleVector, modelParameter);
     }
 
     public void upgradeSwarm() {
