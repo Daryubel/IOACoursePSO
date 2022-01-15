@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class PSOSwarm implements arrayUtils,inversionUtils{
 
-    public double[] modelParameter = {40,20,44,20,30};
+    public double[] modelParameter = {15,20,44,17,10};
     ArrayList<PSOParticle> swarmBody = new ArrayList<>(100);
     int LocSize;
     PSOParticle globalBest;

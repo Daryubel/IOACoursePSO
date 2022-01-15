@@ -3,7 +3,7 @@ import java.util.Arrays;
 
 public class IOAMain implements arrayUtils, inversionUtils{
 
-    public double[] modelParameter = {40,20,44,20,30};
+    public double[] modelParameter = {15,20,44,17,10};
 
     public void run() {
 
@@ -50,8 +50,13 @@ public class IOAMain implements arrayUtils, inversionUtils{
         plot2DProfile(meshX, forwardingRect(swarm.globalBest.particleVector), "optimized");
         plot2DProfile(meshX, forwardingRect(modelParameter), "model");
         plot2DProfile(iterate,misfit,"misfit curve");
+        System.out.print("iteration finished in ");
+        System.out.print(iteration);
+        System.out.println("iteration epochs;");
+        System.out.println("estimated model parameter: ");
         System.out.println(Arrays.toString(swarm.globalBest.particleVector));
-        System.out.println(iteration);
+        System.out.println("model misfit: ");
+        System.out.println(misfit);
     }
 
 

@@ -1,6 +1,6 @@
 public class PSOParticle implements arrayUtils, inversionUtils{
 
-    public double[] modelParameter = {40,20,44,20,30};
+    public double[] modelParameter = {15,20,44,17,10};
     int vecDim = 5;
     double c1=1, c2=1, r1=2, r2=2;
     double leastMisfit = 10000;
