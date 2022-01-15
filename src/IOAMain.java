@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class IOAMain implements arrayUtils, inversionUtils{
@@ -11,13 +12,15 @@ public class IOAMain implements arrayUtils, inversionUtils{
         for (int i = 0; i < meshX.length; i++) {
             meshX[i] = i - 50.0/2.0;
         }
+        ArrayList<Double> misfit = new ArrayList();
+        double[] iterate = null;
 
         // initialize particle swarm;
         PSOSwarm swarm = new PSOSwarm();
         swarm.setPSOSwarmSize(100);
-        swarm.setSwarmInterval(new double[]{0,0,0,0,0}, new double[]{100,100,100,100,100}, new double[]{1,1,1,1,1});
+        swarm.setSwarmInterval(new double[]{0,0,0,0,0}, new double[]{100,100,100,100,100}, new double[]{10,10,10,10,10});
         swarm.initializeSwarm();
-        plot2DProfile(meshX, forwardingRect(swarm.globalBest.particleVector), "initial");
+        plot2DProfile(meshX, forwardingRect(swarm.globalBest.particleVector), "optimized");
 
         // initial parameter forwarding output;
 //        plot2DProfile(meshX, forwardingOrbit(swarm.globalBest.particleVector), "initial");
@@ -29,10 +32,15 @@ public class IOAMain implements arrayUtils, inversionUtils{
 
         // iteration condition = misfit < 10^-3 or iteration time > 10000
         int iteration = 0;
-        while ((swarm.getLeastMisfit() > 1e-3) && (iteration<1e2)) {
+        while ((swarm.getLeastMisfit() > 1e-3) && (iteration<1e3)) {
             swarm.upgradeSwarm();
             swarm.getGlobalBest();
             iteration = iteration + 1;
+            misfit.add(getMisfit(swarm.globalBest.particleVector,modelParameter));
+        }
+        iterate = new double[iteration];
+        for (int i = 0; i < iteration; i++) {
+            iterate[i] = i;
         }
 
         // draw the optimized parameter and the accurate model;
@@ -41,6 +49,9 @@ public class IOAMain implements arrayUtils, inversionUtils{
 //        plot2DProfile(meshX, forwardingOrbit(new double[]{3.0,5.0}), "model");
         plot2DProfile(meshX, forwardingRect(swarm.globalBest.particleVector), "optimized");
         plot2DProfile(meshX, forwardingRect(modelParameter), "model");
+        plot2DProfile(iterate,misfit,"misfit curve");
+        System.out.println(Arrays.toString(swarm.globalBest.particleVector));
+        System.out.println(iteration);
     }
 
 

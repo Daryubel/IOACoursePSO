@@ -2,10 +2,18 @@ import org.knowm.xchart.QuickChart;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
 
+import java.util.ArrayList;
+
 public interface inversionUtils {
 
 
     default void plot2DProfile(double[] x, double[] y, String title) {
+        XYChart chart = QuickChart.getChart(title, "X", "Y", "V_{zz}", x, y);
+        new SwingWrapper(chart).displayChart(); }
+    default void plot2DProfile(double[] x, ArrayList<Double> yy, String title) {
+        double[] y = new double[yy.size()];
+        for (int i = 0; i < yy.size(); i++) {
+            y[i] = yy.get(i); }
         XYChart chart = QuickChart.getChart(title, "X", "Y", "V_{zz}", x, y);
         new SwingWrapper(chart).displayChart();
     }

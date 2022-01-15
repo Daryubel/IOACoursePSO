@@ -2,7 +2,7 @@ public class PSOParticle implements arrayUtils, inversionUtils{
 
     public double[] modelParameter = {40,20,44,20,30};
     int vecDim = 5;
-    double c1=0.5, c2=0.5, r1=1.5, r2=1.5;
+    double c1=1, c2=1, r1=2, r2=2;
     double leastMisfit = 10000;
     double[] floor = {0,0,0,0,0}, ceil = {100,100,100,100,100}, vCeil = {100,100,100,100,100};
     double[] particleVector = new double[vecDim];
@@ -52,12 +52,21 @@ public class PSOParticle implements arrayUtils, inversionUtils{
         inertiaTerm = particleVelocity;
         socialTerm = arrayMtply(c1,r1,arraySub(globalBest.particleVector,particleVector));
         personalTerm = arrayMtply(c2,r2,arraySub(personalBestVector,particleVector));
-        setParticleVelocity(arraySum(inertiaTerm, socialTerm, personalTerm));
+        // check if the velocity is still within the set boundary;
+        if (isWithinInterval(arraySum(inertiaTerm, socialTerm, personalTerm),vCeil)) {
+            setParticleVelocity(arraySum(inertiaTerm, socialTerm, personalTerm));
+        } else {
+            setParticleVelocity(vCeil);
+        }
     }
 
     public void upgradeParticleVector() {
-        setParticleVector(arraySum(particleVector,particleVelocity));
-
+        // check if the vector is still within the solution space;
+        if (isWithinInterval(arraySum(particleVector,particleVelocity),floor,ceil)) {
+            setParticleVector(arraySum(particleVector,particleVelocity));
+        } else {
+            setParticleVector(ceil);
+        }
         // check if the newly upgraded vector is having
         // smaller misfit than previous ones;
         double localMisfit = getMisfit(particleVector, modelParameter);
